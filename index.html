@@ -66,6 +66,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .tb-icon-btn:hover{background:var(--surf2)}
 .notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:#EF4444;border-radius:50%;border:1.5px solid var(--surf);display:none}
 .content{padding:18px 22px;flex:1;overflow-y:auto;min-height:0}
+.mobile-menu-btn,.sb-backdrop{display:none}
+.cloud-lock{height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+.cloud-lock-card{width:min(420px,100%);background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);box-shadow:var(--sh);padding:22px;text-align:left}
+.cloud-lock-logo{width:42px;height:42px;border-radius:var(--r);background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;margin-bottom:14px}
+.cloud-lock-title{font-size:19px;font-weight:700;color:var(--tx);margin-bottom:8px}
+.cloud-lock-text{font-size:13px;color:var(--tx2);line-height:1.45;margin-bottom:16px}
+.cloud-lock-actions{display:flex;gap:8px;flex-wrap:wrap}
 
 /* TAGS */
 .tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
@@ -459,28 +466,80 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
 ::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
 
 @media(max-width:820px){
-  .lay{flex-direction:column}
-  .sb{width:100%;max-height:132px;border-right:none;border-bottom:1px solid var(--brd);overflow-x:auto;display:grid;grid-template-columns:180px repeat(7,minmax(120px,1fr));grid-auto-flow:column;align-items:start}
-  .sb-logo,.sb-sec,.sb-foot{border:0}
-  .sb-sec{display:none}
-  .sb-item{margin:6px 4px;width:auto;white-space:nowrap}
-  .sb-foot{padding:6px;min-width:180px}
-  .topbar{height:auto;min-height:52px;align-items:flex-start;padding:8px 12px;flex-wrap:wrap}
-  .tb-right{width:100%;margin-left:0;align-items:center;justify-content:space-between;gap:6px}
-  .view-tabs{overflow-x:auto;max-width:100%}
-  .view-tab{white-space:nowrap}
-  .content{padding:12px}
-  .ti{align-items:flex-start}
-  .t-btns{flex-direction:column}
+  html,body{height:100%;overflow:hidden}
+  body{font-size:14px;background:var(--bg)}
+  .lay{display:block;height:100dvh;min-height:100dvh;overflow:hidden}
+  .main{height:100dvh;min-height:0;width:100%;display:flex}
+  .mobile-menu-btn{display:flex;flex-shrink:0}
+  .sb{position:fixed;inset:0 auto 0 0;width:min(86vw,310px);height:100dvh;max-height:none;z-index:320;transform:translateX(-105%);transition:transform .2s ease;border-right:1px solid var(--brd);border-bottom:none;display:flex;overflow-y:auto;overflow-x:hidden;box-shadow:var(--sh2);padding-bottom:80px}
+  .sb.open{transform:translateX(0)}
+  .sb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:300}
+  .sb-backdrop.open{display:block}
+  .sb-logo{position:sticky;top:0;background:var(--surf);z-index:2}
+  .sb-sec{display:block}
+  .sb-item{margin:1px 8px;width:calc(100% - 16px);white-space:normal;min-height:38px}
+  .sb-foot{margin-top:12px}
+  .topbar{height:auto;min-height:58px;padding:8px 10px;gap:8px;position:sticky;top:0;z-index:180;flex-wrap:wrap;align-items:center}
+  .page-title{font-size:16px;min-width:82px}
+  .tb-right{width:100%;margin-left:0;gap:6px;display:flex;align-items:center;overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .top-add{height:38px;justify-content:center;font-size:13px;padding:8px 11px;flex:0 0 auto}
+  .top-manage{height:38px;width:auto;padding:8px 10px;font-size:12px;justify-content:center;flex:0 0 auto}
+  .quick-search{height:38px;min-width:190px;flex:1 0 190px}
+  .quick-search input{width:100%;font-size:13px}
+  .view-tabs{position:fixed;left:0;right:0;bottom:0;z-index:220;border-radius:0;border-top:1px solid var(--brd);padding:5px 6px;background:var(--surf);box-shadow:0 -6px 18px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+  .view-tab{height:44px;justify-content:center;flex-direction:column;gap:1px;font-size:11px;white-space:nowrap;border-radius:8px}
+  .tb-icon-btn#notif-btn{position:absolute;right:10px;top:10px}
+  .content{padding:12px 10px 126px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .backup-bar{position:fixed;left:0;right:0;bottom:55px;z-index:210;flex-wrap:nowrap;gap:6px;padding:7px 8px;overflow-x:auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px)}
+  .backup-bar>span:first-child,.bb-last{display:none}
+  .bb-btn,.cloud-pill{flex:0 0 auto;min-height:34px}
+  .list-top{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-bottom:12px}
+  .list-actions{display:flex;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px;gap:6px}
+  .fp,.fp-proj{flex:0 0 auto;height:34px}
+  .fp-sep{display:none}
+  .adv-filter{width:100%;margin-left:0;display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:8px;box-shadow:var(--sh)}
+  .adv-filter-lbl{align-self:center}
+  .adv-filter .btn-c{grid-column:1/-1;height:32px}
+  .adv-filter select{min-width:0;width:100%;height:32px}
+  .grp{margin-bottom:16px}
+  .grp-hdr{position:sticky;top:0;background:var(--bg);z-index:3;padding:5px 0;margin:0 0 6px}
+  .ti{padding:11px 10px;align-items:flex-start;gap:8px;margin-bottom:7px;border-radius:12px}
+  .tbody{min-width:0}
+  .ttitle{font-size:14px;line-height:1.32;margin-bottom:6px}
+  .tmeta{gap:4px}
+  .tag,.proj-tag,.ttime{font-size:10.5px}
+  .t-btns{display:grid;grid-template-columns:repeat(3,34px);gap:5px;margin-left:auto}
+  .act-btn{width:34px;height:34px;font-size:15px}
+  .kb-wrap{gap:10px;scroll-snap-type:x mandatory;padding-bottom:10px}
+  .kb-col{min-width:82vw;width:82vw;scroll-snap-align:start}
+  .cal-hdr{position:sticky;top:0;background:var(--bg);z-index:5;padding:4px 0;align-items:center}
+  .cal-grid{border-radius:10px}
+  .cal-dl{padding:6px 2px;font-size:10px}
+  .cal-cell{min-height:74px;padding:4px 3px}
+  .cal-ev{font-size:9px;padding:2px 3px;max-width:100%}
+  .cal-ev.has-time{font-size:9.5px;padding:2px 3px}
+  .cal-more{font-size:9px}
   .dash-row,.fr3,.fr2,.fr-time-label{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .kpi{padding:12px}
+  .dash-hdr{align-items:flex-start}
+  .per-row{overflow-x:auto;width:100%;padding-bottom:2px}
   .notes-wrap,.study-wrap,.routine-wrap{grid-template-columns:1fr}
+  .notes-side,.study-side{max-height:36dvh;overflow-y:auto}
+  .notes-main,.study-main{min-height:46dvh}
   .routine-form-grid{grid-template-columns:1fr}
-  .mo{max-height:96vh}
+  .lesson-row{grid-template-columns:auto 1fr;align-items:flex-start}
+  .lesson-actions{grid-column:1/-1;justify-content:flex-start}
+  .mo{max-height:100dvh;height:100dvh;border-radius:0;border-left:0;border-right:0}
+  .mbk{padding:0;align-items:stretch}
   .mo-inner{flex-direction:column}
   .mo-side{width:100%;max-height:220px;border-left:none;border-top:1px solid var(--brd)}
-  .cal-cell{min-height:96px}
-  .backup-bar{flex-wrap:wrap;padding:8px 12px}
-  .bb-last{margin-left:0}
+  .mo-hdr,.mo-body,.mo-foot{padding-left:12px;padding-right:12px}
+  .mo-foot{position:sticky;bottom:0;background:var(--surf);justify-content:stretch}
+  .mo-foot .btn-c,.mo-foot .btn-p{flex:1;min-height:38px}
+  .rte-tb{overflow-x:auto;flex-wrap:nowrap}
+  .np{top:58px;left:8px;right:8px;width:auto;max-height:60dvh;border-radius:var(--rl);border:1px solid var(--brd)}
+  .pomo-alert{left:10px;right:10px;bottom:114px;max-width:none}
 }
 </style>
 </head>
@@ -509,9 +568,11 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
 
     </div>
   </aside>
+  <div class="sb-backdrop" id="sb-backdrop" onclick="closeMobileNav()"></div>
 
   <div class="main">
     <div class="topbar">
+      <button class="tb-icon-btn mobile-menu-btn" onclick="toggleMobileNav()" title="Menu">&#9776;</button>
       <span class="page-title" id="page-title">Lista</span>
       <div class="tb-right">
         <button class="sb-add top-add" onclick="openNew()">&#43; Nova tarefa</button>
@@ -557,9 +618,13 @@ const undoStack=[],redoStack=[];
 const UNDO_MAX=30;
 const SUPABASE_URL='https://sdgjjsavtekkrqejbwyo.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_HAk8CCXK5jy2oTbIRak4ug_XXOXM8av';
+const CLOUD_LOGIN_REQUIRED=location.protocol==='https:';
 let sbClient=null,cloudUser=null,cloudSaveTimer=null,cloudApplying=false,cloudLastSync='',cloudReady=false;
 function stateObject(){return{_version:SCHEMA_VERSION,_savedAt:new Date().toISOString(),tasks,notes,studies,routines,columns,globalLabels,globalClients,PROJECTS,PC,typeOptions,priorityOptions,dismissedNot};}
 function appState(){return JSON.stringify(stateObject());}
+function isCloudLocked(){return CLOUD_LOGIN_REQUIRED&&(!cloudReady||!cloudUser);}
+function toggleMobileNav(){document.querySelector('.sb')?.classList.toggle('open');document.getElementById('sb-backdrop')?.classList.toggle('open');}
+function closeMobileNav(){document.querySelector('.sb')?.classList.remove('open');document.getElementById('sb-backdrop')?.classList.remove('open');}
 function applyState(raw){
   const st=JSON.parse(raw);
   tasks=st.tasks;notes=st.notes||notes;studies=st.studies||studies;routines=st.routines||routines;columns=st.columns;globalLabels=st.globalLabels;globalClients=st.globalClients||[];PROJECTS=st.PROJECTS||PROJECTS;PC=st.PC||PC;typeOptions=st.typeOptions||typeOptions;priorityOptions=st.priorityOptions||priorityOptions;dismissedNot=st.dismissedNot||[];
@@ -823,8 +888,9 @@ function lblChip(id,small){const lb=globalLabels.find(x=>x.id===id);if(!lb)retur
 
 // ── VIEWS ─────────────────────────────────────────────────────────────────────
 function sv(v,el){
+  closeMobileNav();
   curView=v;
-  const titles={list:'Lista',kanban:'Kanban',calendar:'Calendário',dashboard:'Dashboard',notes:'Anotações',studies:'Estudos'};
+  const titles={list:'Lista',kanban:'Kanban',calendar:'Calendário',dashboard:'Dashboard',notes:'Anotações',studies:'Estudos',routines:'Rotinas'};
   document.getElementById('page-title').textContent=titles[v];
   document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('nav-notes')?.classList.toggle('active',v==='notes');
@@ -834,6 +900,7 @@ function sv(v,el){
   render();
 }
 function showNotes(el){
+  closeMobileNav();
   curView='notes';document.getElementById('page-title').textContent='Anotações';
   document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('#project-nav .sb-item').forEach(b=>b.classList.remove('active'));
@@ -842,6 +909,7 @@ function showNotes(el){
   if(el)el.classList.add('active');render();
 }
 function showStudies(el){
+  closeMobileNav();
   curView='studies';document.getElementById('page-title').textContent='Estudos';
   document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('#project-nav .sb-item').forEach(b=>b.classList.remove('active'));
@@ -850,6 +918,7 @@ function showStudies(el){
   if(el)el.classList.add('active');render();
 }
 function showRoutines(el){
+  closeMobileNav();
   curView='routines';document.getElementById('page-title').textContent='Rotinas';
   document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('#project-nav .sb-item').forEach(b=>b.classList.remove('active'));
@@ -858,18 +927,25 @@ function showRoutines(el){
   if(el)el.classList.add('active');render();
 }
 function setPF(p,el){
+  closeMobileNav();
   fProj=fProj===p&&p!=='all'?'all':p;
   if(fProj!=='all')fType='all';
   if(curView!=='list'&&curView!=='kanban'&&curView!=='calendar')sv('list',document.querySelector('.view-tab'));
   else render();
 }
 function setTypeSide(t){
+  closeMobileNav();
   fType=fType===t?'all':t;fProj='all';
   sv('calendar',document.querySelector('.view-tab[onclick*="calendar"]'));
 }
 
 function renderProjectSidebar(){
   const nav=document.getElementById('project-nav');if(!nav)return;
+  document.body.classList.toggle('cloud-locked',isCloudLocked());
+  if(isCloudLocked()){
+    nav.innerHTML=`<button class="sb-item active" onclick="openCloudLogin()"><span class="sb-dot" style="background:var(--acc)"></span> Entrar na nuvem</button>`;
+    return;
+  }
   if(fProj!=='all'&&!PROJECTS.includes(fProj))fProj='all';
   const taskView=['list','kanban','calendar','dashboard'].includes(curView);
   nav.innerHTML=`<button class="sb-item${fProj==='all'&&taskView?' active':''}" data-project="all"><span class="sb-dot" style="background:#A09D96"></span> Todos</button>`+
@@ -884,6 +960,16 @@ function renderProjectSidebar(){
 function render(){
   renderProjectSidebar();
   const c=document.getElementById('mc');
+  if(isCloudLocked()){
+    c.innerHTML=`<div class="cloud-lock"><div class="cloud-lock-card">
+      <div class="cloud-lock-logo">&#9889;</div>
+      <div class="cloud-lock-title">Entre para acessar o Hardwork</div>
+      <div class="cloud-lock-text">${cloudReady?'Seus dados ficam protegidos no Supabase. Faça login para carregar tarefas, notas, estudos e rotinas.':'Conectando à nuvem para verificar sua sessão...'}</div>
+      <div class="cloud-lock-actions"><button class="btn-p" onclick="openCloudLogin()">Entrar na nuvem</button><button class="btn-c" onclick="location.reload()">Atualizar</button></div>
+    </div></div>`;
+    updateCloudBar();
+    return;
+  }
   if(curView==='list')c.innerHTML=rList();
   else if(curView==='kanban')c.innerHTML=rKanban();
   else if(curView==='calendar')c.innerHTML=rCal();
@@ -1262,345 +1348,9 @@ function lessonToTask(courseId,lessonId){
   tasks.push({id:nextId++,title:'Estudar: '+(l.title||c.course),type:'task',status:'todo',priority:c.priority||'med',date:l.date||'',time:'',details:`<p><strong>${esc(c.course||'Curso')}</strong></p>${l.module?`<p>Módulo: ${esc(l.module)}</p>`:''}${l.link?`<p><a href="${esc(l.link)}" target="_blank" rel="noopener">${esc(l.link)}</a></p>`:''}${l.notes?`<p>${esc(l.notes).replace(/\n/g,'<br>')}</p>`:''}`,subtasks:[],totalTime:0,sessions:[],project:c.project||'',client:'',labels:[],history:[]});
   l.taskId=nextId-1;persist();showToast('Tarefa criada a partir da aula');
 }
-function importDopamineFinanceLessons(){
-  const course=studies.find(c=>String(c.course||'').toLowerCase().includes('reservatório de dopamina')||String(c.course||'').toLowerCase().includes('reservatorio de dopamina'));
-  if(!course)return false;
-  const module='Finanças comportamentais';
-  const link='https://reservatoriodedopamina.entregadigital.app.br/produtos/1160';
-  const lessons=[
-    ['Aula 1 - Decidir com dinheiro. como esse processo realmente funciona',49],
-    ['Aula 2 - Por que erramos tanto ao decidir com dinheiro',48],
-    ['Aula 3 - Consumo conspícuo: dinheiro como sinal social',44],
-    ['Aula 4 - Quando pagar não parece gastar',33],
-    ['Aula 5 - Quando a falta de dinheiro encurta o horizonte de decisão',41],
-    ['Aula 6 - Tudo começa aqui: a base da boa decisão financeira',40],
-    ['Aula 7 - As habilidades que sustentam ganhos no longo prazo',45],
-    ['Aula 8 - Quando decidir bem vira padrão: Higiene da decisão',64],
-    ['Aula 9 - Dinheiro como meio, não como fim: a construção do bem-estar financeiro',44],
-    ['Live Tira-Dúvidas: Da Teoria à Prática',89],
-  ];
-  course.lessons=course.lessons||[];
-  let added=0;
-  lessons.forEach(([title,min],i)=>{
-    const exists=course.lessons.some(l=>String(l.title||'').trim().toLowerCase()===title.toLowerCase());
-    if(exists)return;
-    course.lessons.push({id:Date.now()+i,title,module,status:'todo',date:'',link,notes:`Duração: ${min} min\nLink do módulo: ${link}`,created:new Date().toISOString()});
-    added++;
-  });
-  if(added){save('hw_studies',studies);curStudyId=course.id;}
-  return added>0;
-}
-function importDopamineAILessons(){
-  const course=studies.find(c=>String(c.course||'').toLowerCase().includes('reservatório de dopamina')||String(c.course||'').toLowerCase().includes('reservatorio de dopamina'));
-  if(!course)return false;
-  const track='Entendendo a Inteligência Artificial';
-  const link='https://reservatoriodedopamina.entregadigital.app.br/produtos/1094';
-  const groups=[
-    ['Introdução',[
-      ['Introdução ao Curso',33],
-    ]],
-    ['Fundamentos e História da Inteligência Artificial',[
-      ['Aula 1 - História da IA',38],
-      ['Aula 2 - O que é IA',20],
-      ['Aula 3 - Como a IA está organizada',22],
-    ]],
-    ['Paradigma Simbólico: A Era das Regras e do Raciocínio Lógico',[
-      ['Aula 4 - O DNA da IA - O Paradigma Simbólico',26],
-      ['Aula 5 - O jogo do Quinze - Brincando com a Inteligência',23],
-      ['Aula 6 - Labirintos da Mente - Busca em espaços de estado',44],
-      ['Aula 7 - Andando no Escuro - Busca sem informação',31],
-      ['Aula 8 - Caminhando e contando - Busca sem informação - Parte 2',9],
-      ['Aula 9 - A primeira impressão engana - Busca pela melhor escolha',18],
-      ['Aula 10 - A estrela da busca - Algoritmo A*',15],
-      ['Aula 11 - A era dos sistemas baseados em conhecimento',34],
-      ['Aula 12 - Ontologias e web semântica',40],
-    ]],
-    ['Paradigma Estatístico: Quando a IA Aprendeu com os Dados',[
-      ['Aula 13 - Paradigma estatístico e aprendizado de máquina',17],
-      ['Aula 14 - Decisões em galhos - Árvore ID3',33],
-      ['Aula 15 - Árvore de decisão - Estudo de caso',23],
-      ['Aula 16 - Do ID3 ao C4.5 - A evolução das árvores de decisão',18],
-      ['Aula 17 - Agrupando Ideias - Descobrindo padrões com K-Means',33],
-      ['Aula 18 - A escada da inteligência - Agrupamentos hierárquicos',13],
-      ['Aula 19 - Ciência de dados e IA - Uma parceria inseparável',42],
-    ]],
-    ['Paradigma Conexionista: A Era do Aprendizado Profundo',[
-      ['Aula 20 - Paradigma conexionista',23],
-      ['Aula 21 - O cérebro artificial - Introdução às redes neurais',33],
-      ['Aula 22 - RNA aplicado - Turnover de colaboradores',18],
-      ['Aula 23 - Mergulho profundo - A era do Deep Learning',26],
-    ]],
-    ['A Inteligência Linguística e os Modelos Generativos',[
-      ['Aula 24 - Criatividade artificial - Introdução à IA generativa',22],
-      ['Aula 25 - Recuperação de informação',40],
-      ['Aula 26 - Classificação de documentos',20],
-      ['Aula 27 - Análise e classificação textual',30],
-      ['Aula 28 - Extração de informação e termos',29],
-      ['Aula 29 - Quando a IA aprendeu a falar - BERT, GPT e o novo PLN',46],
-    ]],
-    ['IA Híbrida, Aplicações e Reflexões Éticas',[
-      ['Aula 30 - IA Híbrida - Quando o simbólico encontra o conexionista',30],
-      ['Aula 31 - Com que roupa eu vou - Escolhendo a melhor abordagem',46],
-      ['Aula 32 - Para que(m) serve a IA',61],
-    ]],
-  ];
-  course.lessons=course.lessons||[];
-  let changed=0;
-  course.lessons.forEach(l=>{
-    if((l.notes||'').includes(`Trilha: ${track}`)&&l.link!==link){l.link=link;changed++;}
-  });
-  let added=0,idx=0;
-  groups.forEach(([module,lessons])=>{
-    lessons.forEach(([title,min])=>{
-      const exists=course.lessons.some(l=>String(l.title||'').trim().toLowerCase()===title.toLowerCase());
-      if(exists)return;
-      course.lessons.push({id:Date.now()+1000+idx++,title,module,status:'todo',date:'',link,notes:`Trilha: ${track}\nDuração: ${min} min\nLink do módulo: ${link}`,created:new Date().toISOString()});
-      added++;
-    });
-  });
-  if(added||changed){save('hw_studies',studies);curStudyId=course.id;}
-  return added>0||changed>0;
-}
-function importVendaDireitoCronograma(){
-  const marker='hw_import_venda_direito_cronograma_20260806_v1';
-  if(localStorage.getItem(marker))return false;
-  const backupKey='hw_backup_before_'+marker;
-  try{
-    localStorage.setItem(backupKey,appState());
-    localStorage.setItem('hw_last_auto_backup_key',backupKey);
-  }catch(e){console.warn('Nao foi possivel criar backup automatico do cronograma',e);}
-  const norm=s=>String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  const ensureProject=(name,color)=>{
-    const found=PROJECTS.find(p=>norm(p)===norm(name));
-    if(found)return found;
-    PROJECTS.push(name);PC[name]=color;return name;
-  };
-  const ensurePriority=(id,name,color)=>{
-    const found=priorityOptions.find(p=>p.id===id||norm(p.name)===norm(name));
-    if(found){if(!found.color)found.color=color;return found.id;}
-    priorityOptions.push({id,name,color});return id;
-  };
-  const ensureColumn=(id,name,color)=>{
-    const found=columns.find(c=>c.id===id||norm(c.name)===norm(name));
-    if(found){if(!found.color)found.color=color;return found.id;}
-    columns.push({id,name,color});return id;
-  };
-  ensureProject('Forecast','#713F12');
-  ensureProject('Financeiro','#0F766E');
-  ensureProject('Venda Direito','#2563EB');
-  ensureProject('Comercial Forecast','#7C3AED');
-  ensureProject('Juridico','#991B1B');
-  ensureProject('Operacional','#475569');
-  const prCrit=ensurePriority('critical','Critica','#B91C1C');
-  const prAlta=ensurePriority('high','Alta','#993C1D');
-  const prMedia=ensurePriority('med','Media','#633806');
-  const stDefault=ensureColumn('not-started','Nao iniciada','#8B8A84');
-  const stBlocked=ensureColumn('blocked','Bloqueada','#B91C1C');
-  const stWaiting=ensureColumn('waiting-third','Aguardando terceiro','#D97706');
-  const prio=p=>norm(p)==='critica'?prCrit:norm(p)==='media'?prMedia:prAlta;
-  const details=it=>{
-    const rows=[
-      ['Cronograma','Hardwork - 06/08/2026 a 04/09/2026'],
-      ['Fase',it.phase],
-      ['Data de inicio',it.dateLabel||it.date],
-      ['Area/projeto',it.project],
-      ['Prioridade',it.priority],
-      ['Tempo estimado',it.time],
-      ['Dependencia',it.dep],
-      ['Prazo relativo',it.relative],
-      ['Criterio de conclusao',it.done],
-      ['Observacao',it.note],
-    ].filter(r=>r[1]);
-    return rows.map(r=>`<p><strong>${esc(r[0])}:</strong> ${esc(r[1])}</p>`).join('');
-  };
-  const phase1='Fase 1 - Destravar a saida e proteger o contrato';
-  const phase2='Fase 2 - Documentar e encerrar sua responsabilidade operacional';
-  const phase3='Fase 3 - Formalizar a Venda Direito';
-  const phase4='Fase 4 - Operacao para garantir os R$ 70 mil';
-  const phase5='Fase 5 - Abertura do CNPJ e operacao financeira';
-  const phase6='Fase 6 - Lancamento minimo da Venda Direito';
-  const items=[
-    {date:'2026-08-06',title:'Criar pasta-mae "Separacao Forecast - Documentacao Final"',project:'Forecast',priority:'Critica',time:'30 min',done:'Pasta criada e organizada por contrato, anexos, pagamentos, certidoes e comprovantes',phase:phase1},
-    {date:'2026-08-06',title:'Salvar contrato e anexos assinados em tres locais seguros',project:'Forecast',priority:'Critica',time:'30 min',done:'Arquivos salvos no computador, nuvem pessoal e backup externo',phase:phase1},
-    {date:'2026-08-06',title:'Registrar recebimento da primeira parcela',project:'Financeiro',priority:'Critica',time:'20 min',done:'Comprovante salvo e valor lancado no controle financeiro',phase:phase1},
-    {date:'2026-08-06',title:'Solicitar confirmacao do protocolo da alteracao societaria',project:'Forecast',priority:'Critica',time:'20 min',done:'Responsavel, prazo e numero do protocolo identificados',phase:phase1},
-    {date:'2026-08-07',title:'Confirmar quem acompanhara a Junta Comercial ate o arquivamento',project:'Forecast',priority:'Critica',time:'20 min',done:'Responsavel definido por escrito',phase:phase1},
-    {date:'2026-08-07',title:'Criar checklist completo de transferencia de acessos',project:'Forecast',priority:'Alta',time:'1h',done:'Banco Inter, Gmail, Asaas, Drive e demais acessos listados',phase:phase1},
-    {date:'2026-08-07',title:'Criar pasta "Evidencias da Transicao"',project:'Forecast',priority:'Alta',time:'30 min',done:'Estrutura pronta para prints, videos, confirmacoes e protocolos',phase:phase1},
-    {date:'2026-08-08',title:'Separar arquivos pessoais e arquivos da Forecast no Google Drive',project:'Forecast',priority:'Alta',time:'2h',done:'Arquivos classificados e prontos para transferencia',phase:phase1},
-    {date:'2026-08-10',title:'Transferir integralmente o Gmail central da Forecast',project:'Forecast',priority:'Critica',time:'1h',done:'Senha, recuperacao, telefone, 2FA e dispositivos transferidos',phase:phase1},
-    {date:'2026-08-10',title:'Transferir integralmente o Asaas',project:'Forecast',priority:'Critica',time:'1h',done:'Controle administrativo removido da conta pessoal',phase:phase1},
-    {date:'2026-08-10',title:'Transferir controle do Banco Inter',project:'Forecast',priority:'Critica',time:'1h',done:'Thiago confirmado como responsavel principal',phase:phase1},
-    {date:'2026-08-11',title:'Transferir arquivos corporativos mantidos em conta pessoal',project:'Forecast',priority:'Critica',time:'2h',done:'Arquivos transferidos e confirmacao escrita recebida',phase:phase1},
-    {date:'2026-08-11',title:'Solicitar atualizacao da situacao da Forecast no Serasa',project:'Forecast',priority:'Alta',time:'1h',done:'Protocolo de solicitacao gerado e salvo',phase:phase1},
-    {date:'2026-08-12',title:'Fazer revisao geral das contas e acessos ja transferidos',project:'Forecast',priority:'Alta',time:'1h',done:'Nenhum acesso critico restante sem responsavel',phase:phase1},
-    {date:'2026-08-10',title:'Criar indice da transferencia de conhecimento',project:'Forecast',priority:'Alta',time:'1h',done:'Lista de processos e videos necessaria concluida',phase:phase2},
-    {date:'2026-08-11',title:'Documentar rotina de pagamentos e controles financeiros',project:'Forecast',priority:'Alta',time:'2h',done:'Documento com passo a passo finalizado',phase:phase2},
-    {date:'2026-08-12',title:'Documentar cobrancas e operacao do Asaas',project:'Forecast',priority:'Alta',time:'2h',done:'Processo completo registrado',phase:phase2},
-    {date:'2026-08-13',title:'Documentar uso administrativo do Conta Azul',project:'Forecast',priority:'Media',time:'1h30',done:'Rotina existente registrada',phase:phase2},
-    {date:'2026-08-14',title:'Documentar organizacao comercial no Kommo',project:'Forecast',priority:'Alta',time:'2h',done:'Funis, etapas, campos e rotina comercial explicados',phase:phase2},
-    {date:'2026-08-17',title:'Gravar video sobre processos financeiros',project:'Forecast',priority:'Alta',time:'1h30',done:'Video salvo e compartilhado',phase:phase2},
-    {date:'2026-08-18',title:'Gravar video sobre Asaas e cobrancas',project:'Forecast',priority:'Alta',time:'1h',done:'Video salvo e compartilhado',phase:phase2},
-    {date:'2026-08-19',title:'Gravar video sobre Kommo e estrutura comercial',project:'Forecast',priority:'Alta',time:'2h',done:'Video salvo e compartilhado',phase:phase2},
-    {date:'2026-08-20',title:'Consolidar documentos e videos em uma unica pasta',project:'Forecast',priority:'Alta',time:'1h',done:'Pasta completa, organizada e compartilhada',phase:phase2},
-    {date:'2026-08-21',title:'Enviar relatorio formal da primeira entrega da transicao',project:'Forecast',priority:'Critica',time:'30 min',done:'Comunicacao escrita enviada a Thiago',phase:phase2},
-    {date:'2026-08-21',title:'Pedir confirmacao objetiva das pendencias restantes',project:'Forecast',priority:'Alta',time:'20 min',done:'Thiago orientado a indicar pendencias especificas',phase:phase2},
-    {date:'2026-08-06',title:'Definir orcamento financeiro da transicao',project:'Financeiro',priority:'Critica',time:'1h30',dep:'Nenhuma',done:'Custos pessoais, empresariais e reserva separados',phase:phase3,note:'Essas tarefas nao devem esperar o encerramento total da Forecast.'},
-    {date:'2026-08-07',title:'Definir limite de retirada mensal pessoal',project:'Financeiro',priority:'Alta',time:'1h',dep:'Orcamento',done:'Valor mensal maximo estabelecido',phase:phase3,note:'Essas tarefas nao devem esperar o encerramento total da Forecast.'},
-    {date:'2026-08-10',title:'Mapear CNAEs e viabilidade do MEI para a operacao inicial',project:'Venda Direito',priority:'Critica',time:'1h',dep:'Nenhuma',done:'Atividade e enquadramento escolhidos',phase:phase3},
-    {date:'2026-08-11',title:'Preparar dados e documentos para abertura do MEI',project:'Venda Direito',priority:'Alta',time:'1h',dep:'Mapeamento de CNAE',done:'Documentacao pronta',phase:phase3},
-    {date:'2026-08-12',title:'Criar checklist de abertura da empresa',project:'Venda Direito',priority:'Alta',time:'30 min',dep:'Nenhuma',done:'Checklist pronto para execucao apos saida cadastral',phase:phase3},
-    {date:'2026-08-13',title:'Definir estrutura de cobranca e emissao de nota',project:'Venda Direito',priority:'Alta',time:'1h',dep:'Nenhuma',done:'Fluxo financeiro escolhido',phase:phase3},
-    {date:'2026-08-14',title:'Preparar modelo inicial de contrato da consultoria',project:'Venda Direito',priority:'Alta',time:'2h',dep:'Nenhuma',done:'Minuta comercial pronta para revisao',phase:phase3},
-    {date:'2026-08-17',title:'Finalizar escopo da consultoria principal',project:'Venda Direito',priority:'Critica',time:'3h',dep:'Nenhuma',done:'Entregaveis, prazo e limites definidos',phase:phase3},
-    {date:'2026-08-18',title:'Definir preco, condicoes e margem de negociacao',project:'Venda Direito',priority:'Alta',time:'1h30',dep:'Escopo',done:'Tabela comercial finalizada',phase:phase3},
-    {date:'2026-08-19',title:'Finalizar roteiro de reuniao comercial',project:'Venda Direito',priority:'Alta',time:'2h',dep:'Escopo e preco',done:'Script pronto',phase:phase3},
-    {date:'2026-08-20',title:'Finalizar modelo de proposta comercial',project:'Venda Direito',priority:'Alta',time:'3h',dep:'Escopo e preco',done:'Proposta pronta para uso',phase:phase3},
-    {date:'2026-08-21',title:'Organizar onboarding e diagnostico inicial',project:'Venda Direito',priority:'Alta',time:'3h',dep:'Escopo',done:'Processo minimo de entrega pronto',phase:phase3},
-    {date:'2026-08-10',title:'Levantar todos os leads quentes da Forecast',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Lista com nome, estagio e proxima acao',phase:phase4,note:'Embora o prazo contratual seja 30/10, a meta interna deve ser fechar os dois contratos rapidamente.'},
-    {date:'2026-08-11',title:'Selecionar 30 leads prioritarios',project:'Comercial Forecast',priority:'Critica',time:'1h',done:'Lista de ataque definida',phase:phase4},
-    {date:'2026-08-12',title:'Criar mensagem de retomada por perfil de lead',project:'Comercial Forecast',priority:'Alta',time:'2h',done:'Tres versoes de abordagem prontas',phase:phase4},
-    {date:'2026-08-13',title:'Iniciar reativacao dos primeiros 15 leads',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Todos contatados e registrados',phase:phase4},
-    {date:'2026-08-14',title:'Reativar os 15 leads seguintes',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Todos contatados e registrados',phase:phase4},
-    {date:'2026-08-17',title:'Fazer follow-up dos leads com resposta',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Proximos passos registrados',phase:phase4},
-    {date:'2026-08-18',title:'Prospectar anunciantes juridicos externos',project:'Comercial Forecast',priority:'Alta',time:'2h',done:'Pelo menos 20 contatos realizados',phase:phase4},
-    {date:'2026-08-19',title:'Realizar reunioes comerciais agendadas',project:'Comercial Forecast',priority:'Critica',time:'Bloco de 4h',done:'Reunioes realizadas e propostas encaminhadas',phase:phase4},
-    {date:'2026-08-20',title:'Follow-up das propostas em aberto',project:'Comercial Forecast',priority:'Critica',time:'1h30',done:'Todos os decisores acionados',phase:phase4},
-    {date:'2026-08-21',title:'Revisao semanal do pipeline',project:'Comercial Forecast',priority:'Alta',time:'1h',done:'Numero de leads, reunioes e propostas atualizado',phase:phase4},
-    {date:'2026-08-24',title:'Segunda onda de reativacao',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Pelo menos 20 novas abordagens',phase:phase4},
-    {date:'2026-08-25',title:'Pedir indicacoes a parceiros e contatos proximos',project:'Comercial Forecast',priority:'Alta',time:'1h30',done:'Dez pedidos de indicacao realizados',phase:phase4},
-    {date:'2026-08-26',title:'Rodada de reunioes e propostas',project:'Comercial Forecast',priority:'Critica',time:'4h',done:'Reunioes e propostas realizadas',phase:phase4},
-    {date:'2026-08-27',title:'Follow-up focado em decisao',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Objecoes mapeadas e tratadas',phase:phase4},
-    {date:'2026-08-28',title:'Revisao da meta: 2 contratos Forecast',project:'Comercial Forecast',priority:'Critica',time:'1h',done:'Status da meta documentado',phase:phase4,note:'Meta ate 04/09/2026: dois contratos fechados; ou pelo menos quatro propostas comerciais ativas em estagio de decisao.'},
-    {date:'2026-08-31',title:'Terceira rodada de prospeccao',project:'Comercial Forecast',priority:'Alta',time:'2h',done:'Nova lista acionada',phase:phase4},
-    {date:'2026-09-01',title:'Reunioes e fechamento',project:'Comercial Forecast',priority:'Critica',time:'4h',done:'Avanco formal das oportunidades',phase:phase4},
-    {date:'2026-09-02',title:'Follow-up final dos leads mais quentes',project:'Comercial Forecast',priority:'Critica',time:'2h',done:'Respostas e decisoes obtidas',phase:phase4},
-    {date:'2026-09-03',title:'Conferir criterios contratuais dos clientes fechados',project:'Forecast',priority:'Critica',time:'1h',done:'Prazo, ticket, contrato e primeiro pagamento validados',phase:phase4},
-    {date:'2026-09-04',title:'Relatorio do primeiro ciclo comercial',project:'Forecast',priority:'Alta',time:'1h',done:'Resultado, lacunas e proximo ciclo definidos',phase:phase4},
-    {date:'2026-08-06',dateLabel:'Mesmo dia da aprovacao da Junta',title:'Conferir retirada do quadro societario',project:'Juridico',priority:'Critica',relative:'Mesmo dia da aprovacao da Junta',dep:'Arquivamento na Junta',done:'Nome removido da sociedade',phase:phase5,status:stWaiting,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 1 dia util depois',title:'Abrir MEI ou estrutura empresarial definida',project:'Venda Direito',priority:'Critica',relative:'Ate 1 dia util depois',dep:'Retirada societaria',done:'CNPJ ativo',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 2 dias uteis depois',title:'Abrir conta bancaria PJ',project:'Financeiro',priority:'Alta',relative:'Ate 2 dias uteis depois',dep:'CNPJ ativo',done:'Conta operacional criada',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 2 dias uteis depois',title:'Configurar emissao de nota fiscal',project:'Financeiro',priority:'Critica',relative:'Ate 2 dias uteis depois',dep:'CNPJ ativo',done:'Primeira nota de teste emitida',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 3 dias uteis depois',title:'Criar cobranca propria e conta de recebimento',project:'Financeiro',priority:'Alta',relative:'Ate 3 dias uteis depois',dep:'Conta PJ',done:'Fluxo de cobranca funcionando',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 5 dias uteis depois',title:'Transferir linha telefonica para o novo CNPJ',project:'Operacional',priority:'Alta',relative:'Ate 5 dias uteis depois',dep:'CNPJ ativo',done:'Titularidade atualizada',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-06',dateLabel:'Ate 5 dias uteis depois',title:'Atualizar contratos, propostas e assinatura comercial',project:'Venda Direito',priority:'Alta',relative:'Ate 5 dias uteis depois',dep:'CNPJ ativo',done:'Documentos com dados corretos',phase:phase5,status:stBlocked,note:'Tarefa condicional dependente da retirada formal da sociedade.'},
-    {date:'2026-08-24',title:'Definir versao minima do site em HTML',project:'Venda Direito',priority:'Alta',time:'1h',done:'Decisao tomada sobre estrutura inicial',phase:phase6},
-    {date:'2026-08-25',title:'Finalizar textos essenciais do site',project:'Venda Direito',priority:'Alta',time:'3h',done:'Home, metodo, servico e CTA concluidos',phase:phase6},
-    {date:'2026-08-26',title:'Implementar formulario e WhatsApp',project:'Venda Direito',priority:'Alta',time:'1h',done:'Contato funcionando',phase:phase6},
-    {date:'2026-08-27',title:'Revisar responsividade e velocidade',project:'Venda Direito',priority:'Media',time:'2h',done:'Site funcionando em celular e desktop',phase:phase6},
-    {date:'2026-08-28',title:'Publicar versao minima do site',project:'Venda Direito',priority:'Alta',time:'1h',done:'Site online',phase:phase6},
-    {date:'2026-08-31',title:'Configurar CRM proprio provisorio',project:'Venda Direito',priority:'Alta',time:'2h',done:'Funil comercial funcionando',phase:phase6},
-    {date:'2026-09-01',title:'Cadastrar leads e oportunidades proprias',project:'Venda Direito',priority:'Alta',time:'1h30',done:'Pipeline inicial preenchido',phase:phase6},
-    {date:'2026-09-02',title:'Iniciar prospeccao de consultoria propria',project:'Venda Direito',priority:'Critica',time:'2h',done:'Primeiros 15 contatos realizados',phase:phase6},
-    {date:'2026-09-03',title:'Agendar primeiras reunioes independentes',project:'Venda Direito',priority:'Critica',time:'2h',done:'Reunioes no calendario',phase:phase6},
-    {date:'2026-09-04',title:'Revisar estrutura minima da nova empresa',project:'Venda Direito',priority:'Alta',time:'1h',done:'Venda, cobranca e entrega testadas',phase:phase6},
-  ];
-  let added=0;
-  items.forEach((it,i)=>{
-    const exists=tasks.some(t=>norm(t.title)===norm(it.title)&&t.date===it.date&&norm(t.project)===norm(it.project)&&(t.details||'').includes('Hardwork - 06/08/2026 a 04/09/2026'));
-    if(exists)return;
-    tasks.push({
-      id:nextId++,
-      title:it.title,
-      type:'task',
-      status:it.status||stDefault,
-      priority:prio(it.priority),
-      date:it.date,
-      time:'',
-      details:details(it),
-      subtasks:[],
-      totalTime:0,
-      sessions:[],
-      project:it.project,
-      client:'',
-      labels:[],
-      history:[{at:new Date().toISOString(),what:'Criada pelo importador do cronograma Hardwork',phase:it.phase,order:i+1}]
-    });
-    added++;
-  });
-  save('hw_tasks',tasks);save('hw_cols',columns);save('hw_projects',PROJECTS);save('hw_project_colors',PC);save('hw_priorities',priorityOptions);
-  try{localStorage.setItem(marker,JSON.stringify({at:new Date().toISOString(),added,backupKey}));}catch(e){}
-  return added>0;
-}
-
-function rKanban(){
-  let ts=tasks;if(fProj!=='all')ts=ts.filter(t=>t.project===fProj);ts=ts.filter(matchAdvFilter).filter(matchQuickSearch);
-  if(fType!=='all'&&typeOptions.some(o=>o.id===fType))ts=ts.filter(t=>t.type===fType);
-  let html=`<div class="list-top">${advFilterBar()}</div><div class="kb-wrap">`;
-  columns.forEach(col=>{
-    const cts=ts.filter(t=>t.status===col.id);const cc=col.color||'#888';
-    html+=`<div class="kb-col" data-status="${col.id}">
-      <div class="kb-col-hdr" draggable="true" data-col="${col.id}" style="background:${cc}18;color:${cc}">
-        <div class="kb-col-dot" style="background:${cc}"></div>
-        <input class="kb-col-name" value="${esc(col.name)}" onblur="renameCol('${col.id}',this.value)" onkeydown="if(event.key==='Enter')this.blur()" style="color:${cc}">
-        <span class="kb-col-cnt" style="background:${cc}33;color:${cc}">${cts.length}</span>
-        <button class="kb-col-del" onclick="delCol('${col.id}')" title="Excluir etapa">&#10005;</button>
-      </div>
-      <div class="kb-cards" data-status="${col.id}">`;
-    if(!cts.length)html+=`<div style="padding:10px;text-align:center;font-size:12px;color:var(--tx3);border:1px dashed var(--brd2);border-radius:var(--rl)">Sem tarefas</div>`;
-    cts.forEach(t=>{
-      const sd=t.subtasks.filter(s=>s.done).length;const isR=activeId===t.id;
-      const lc=t.labels.map(id=>lblChip(id,true)).join('');
-      html+=`<div class="kc${isR?' trk':''}" draggable="true" data-id="${t.id}" onclick="openTask(${t.id})">
-        <div class="kc-title">${esc(t.title)}</div>
-        <div class="kc-foot"><div style="display:flex;gap:4px;flex-wrap:wrap">${ttag(t.type)}${ptag(t.priority)}${t.project?pjtag(t.project):''}</div>${t.date?`<span class="kc-date">&#128197; ${fd(t.date)}</span>`:''}</div>
-        ${t.subtasks.length?`<div class="kc-prog"><div class="kc-prog-f" style="width:${Math.round(sd/t.subtasks.length*100)}%"></div></div>`:''}
-        ${(t.totalTime||0)>0?`<div class="kc-time">&#128336; ${fmt(t.totalTime)}</div>`:''}
-        ${lc?`<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px">${lc}</div>`:''}
-      </div>`;
-    });
-    html+=`</div><button class="kb-add-btn" onclick="openNew('','${col.id}')">&#43; Adicionar tarefa</button></div>`;
-  });
-  html+=`<div class="kb-new-col"><button class="add-col-btn" onclick="addCol()">&#43; Nova etapa</button></div></div>`;
-  return html;
-}
-function addCol(){
-  const name=prompt('Nome da nova etapa:');if(!name?.trim())return;
-  snapshot();
-  const colors=['#EF4444','#F97316','#8B5CF6','#14B8A6','#EC4899'];
-  columns.push({id:'col_'+Date.now(),name:name.trim(),color:colors[columns.length%colors.length]});
-  persist();
-}
-function renameCol(id,name){if(!name.trim())return;snapshot();const c=columns.find(x=>x.id===id);if(c){c.name=name.trim();persist();}}
-function delCol(id){
-  if(!confirm('Excluir esta etapa? As tarefas da etapa serão movidas para "A fazer".'))return;
-  snapshot();tasks.forEach(t=>{if(t.status===id)t.status='todo';});columns=columns.filter(c=>c.id!==id);persist();
-}
-function initKD(){
-  const cols=document.querySelectorAll('.kb-cards');let ph=null;
-  document.querySelectorAll('.kb-col-hdr[draggable]').forEach(h=>{
-    h.addEventListener('dragstart',e=>{dragColId=h.dataset.col;e.dataTransfer.effectAllowed='move';h.closest('.kb-col')?.classList.add('drag-col');});
-    h.addEventListener('dragend',()=>{dragColId=null;document.querySelectorAll('.kb-col').forEach(c=>c.classList.remove('drag-col','col-target'));});
-  });
-  document.querySelectorAll('.kb-col').forEach(colEl=>{
-    colEl.addEventListener('dragover',e=>{if(!dragColId)return;e.preventDefault();colEl.classList.add('col-target');});
-    colEl.addEventListener('dragleave',e=>{if(!colEl.contains(e.relatedTarget))colEl.classList.remove('col-target');});
-    colEl.addEventListener('drop',e=>{
-      if(!dragColId)return;e.preventDefault();e.stopPropagation();
-      const target=colEl.dataset.status;if(!target||target===dragColId)return;
-      snapshot();
-      const from=columns.findIndex(c=>c.id===dragColId),to=columns.findIndex(c=>c.id===target);
-      if(from>=0&&to>=0){const [m]=columns.splice(from,1);columns.splice(to,0,m);}
-      dragColId=null;persist();
-    });
-  });
-  document.querySelectorAll('.kc[draggable]').forEach(card=>{
-    card.addEventListener('dragstart',e=>{dragId=+card.dataset.id;setTimeout(()=>card.classList.add('dragging'),0);e.dataTransfer.effectAllowed='move';e.stopPropagation();});
-    card.addEventListener('dragend',()=>{document.querySelectorAll('.kc').forEach(c=>c.classList.remove('dragging'));if(ph?.parentNode)ph.parentNode.removeChild(ph);ph=null;cols.forEach(c=>c.classList.remove('drag-on'));persist();});
-  });
-  cols.forEach(col=>{
-    col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('drag-on');const dr=document.querySelector('.kc.dragging');if(!dr)return;const af=dragAfter(col,e.clientY);if(!ph){ph=document.createElement('div');ph.className='kc drag-ph';}if(af)col.insertBefore(ph,af);else col.appendChild(ph);});
-    col.addEventListener('dragleave',e=>{if(!col.contains(e.relatedTarget))col.classList.remove('drag-on');});
-    col.addEventListener('drop',e=>{e.preventDefault();snapshot();const t=tasks.find(x=>x.id===dragId);if(t)t.status=col.dataset.status;dragId=null;cols.forEach(c=>c.classList.remove('drag-on'));if(ph?.parentNode)ph.parentNode.removeChild(ph);ph=null;persist();});
-  });
-}
-function dragAfter(container,y){
-  return[...container.querySelectorAll('.kc:not(.dragging):not(.drag-ph)')].reduce((cl,ch)=>{
-    const b=ch.getBoundingClientRect(),o=y-b.top-b.height/2;
-    if(o<0&&o>cl.offset)return{offset:o,element:ch};return cl;
-  },{offset:-Infinity}).element;
-}
-
+function importDopamineFinanceLessons(){return false;}
+function importDopamineAILessons(){return false;}
+function importVendaDireitoCronograma(){return false;}
 // ── CALENDAR ──────────────────────────────────────────────────────────────────
 function rCal(){
   const mN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -2398,9 +2148,10 @@ async function initCloud(){
   if(!window.supabase){updateCloudBar('Nuvem indisponível','err');return;}
   sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   await getCloudSessionUser();
-  sbClient.auth.onAuthStateChange((_event,session)=>{cloudUser=session?.user||null;updateCloudBar();});
+  sbClient.auth.onAuthStateChange((_event,session)=>{cloudUser=session?.user||null;updateCloudBar();render();});
   cloudReady=true;updateCloudBar();
   if(cloudUser)await cloudLoadNow(false);
+  else render();
 }
 function scheduleCloudSave(){
   if(cloudApplying||!cloudReady||!cloudUser||!sbClient)return;
@@ -2456,6 +2207,7 @@ async function cloudLoadNow(force=false){
   }catch(err){cloudApplying=false;console.error(err);updateCloudBar('Erro ao baixar nuvem','err');alert('Erro ao baixar da nuvem: '+err.message);}
 }
 function openCloudLogin(){
+  closeMobileNav();
   document.getElementById('modal').innerHTML=`<div class="mbk" data-mode="cloud-login" onclick="closeMB(event)"><div class="mo" onclick="event.stopPropagation()" style="max-width:440px"><div class="mo-main">
     <div class="mo-hdr"><span class="mo-title">Entrar na nuvem</span><button class="ib" style="margin-left:auto" onclick="closeModalNoSave()">&#10005;</button></div>
     <div class="mo-body">
@@ -2490,7 +2242,7 @@ async function cloudAuth(signup=false){
 }
 async function cloudSignOut(){
   if(sbClient)await sbClient.auth.signOut();
-  cloudUser=null;cloudLastSync='';updateCloudBar();showToast('Nuvem desconectada');
+  cloudUser=null;cloudLastSync='';updateCloudBar();render();showToast('Nuvem desconectada');
 }
 
 // ── BACKUP ────────────────────────────────────────────────────────────────────
@@ -2556,3 +2308,4 @@ initCloud();
 </script>
 </body>
 </html>
+
