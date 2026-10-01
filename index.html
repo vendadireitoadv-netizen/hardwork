@@ -36,17 +36,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .sb-item:hover{background:var(--surf2);color:var(--tx)}
 .sb-item.active{background:var(--acc-bg);color:var(--acc-tx);font-weight:500}
 .sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-track-slot{padding:0 10px 10px}
 .sb-foot{margin-top:auto;padding:11px 10px;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:8px}
 .sb-timer{background:#FFF0F0;border:1px solid #FECACA;border-radius:var(--r);padding:9px 11px;display:none}
 .sb-timer.on{display:block}
+.sb-timer.break{background:#EFF6FF;border-color:#BFDBFE}
 .sb-timer-lbl{font-size:10px;font-weight:700;color:var(--err-tx);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.sb-timer.break .sb-timer-lbl{color:#1D4ED8}
 .sb-timer-title{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-timer-row{display:flex;align-items:center;justify-content:space-between}
 .sb-clock{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--err-tx)}
+.sb-timer.break .sb-clock{color:#1D4ED8}
 .sb-stop{width:26px;height:26px;border-radius:var(--r);border:none;background:var(--err-tx);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
+.sb-timer.break .sb-stop{background:#1D4ED8}
 .sb-add{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--r);background:var(--acc);color:#fff;font-size:13px;font-weight:500;cursor:pointer;border:none;width:100%;transition:all .15s;font-family:'DM Sans',sans-serif;justify-content:center}
 .sb-add:hover{background:#1a4fd6}
 .top-add{width:auto;padding:7px 12px;white-space:nowrap}
+.today-toggle{border:1px solid var(--brd2);background:var(--surf2);color:var(--tx2)}
+.today-toggle.on{background:#DCFCE7;border-color:#86EFAC;color:#166534}
 .top-manage{width:auto;padding:7px 10px;white-space:nowrap;background:var(--surf2);color:var(--tx2)}
 .top-manage:hover{background:var(--surf3);color:var(--tx)}
 .quick-search{height:34px;display:flex;align-items:center;gap:6px;border:1px solid var(--brd2);background:var(--surf);border-radius:var(--r);padding:0 8px;color:var(--tx3)}
@@ -84,6 +91,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .tag-date{background:var(--surf2);color:var(--tx2);display:inline-flex;align-items:center;gap:3px}
 .tag-date.editable{border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
 .tag-date.editable:hover{background:var(--acc-bg);color:var(--acc-tx)}
+.tag.editable,.proj-tag.editable{border:0;cursor:pointer;font-family:'DM Sans',sans-serif}
+.tag.editable:hover,.proj-tag.editable:hover{filter:brightness(.96);box-shadow:0 0 0 1px var(--acc)}
 .inline-date-input{height:21px;border:1px solid var(--acc);border-radius:20px;background:var(--surf);color:var(--tx);font-size:11px;font-family:'DM Sans',sans-serif;padding:1px 6px}
 .proj-tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
 .pc-Dropship{background:#F3EFFE;color:#5B21B6}
@@ -128,12 +137,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .ti:hover{border-color:var(--brd2)}
 .ti.trk{border-color:#EF4444;box-shadow:0 0 0 2px rgba(239,68,68,.1)}
 .ti.overdue{border-color:#EF4444;background:#FFF7F5;box-shadow:0 0 0 2px rgba(239,68,68,.08)}
+.ti.day-goal{background:#FFF7ED;border-color:#FDBA74;box-shadow:0 0 0 2px rgba(251,146,60,.08)}
 .ti.done-row{opacity:.6}
 .ti[draggable=true]{cursor:grab}
 .ti.dragging{opacity:.3;cursor:grabbing}
-.tchk{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--brd2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px}
+.row-select{width:8px;height:8px;flex:0 0 8px;cursor:pointer;accent-color:var(--acc);margin:0 1px}
+.tchk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--brd2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:var(--tx3)}
 .tchk:hover{border-color:var(--acc)}
 .tchk.done{background:var(--ok-bg);border-color:#3B6D11;color:var(--ok-tx)}
+.tchk:not(.done)::before{content:'✓';opacity:.35;font-size:11px}
 .tbody{flex:1;min-width:0;cursor:pointer}
 .ttitle{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:3px;line-height:1.4}
 .ttitle.done{text-decoration:line-through;color:var(--tx3);font-weight:400}
@@ -143,20 +155,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 .t-btns{display:flex;gap:5px;flex:0 0 auto;align-items:center}
 input[type=text].order-input{width:30px;min-width:30px;max-width:30px;height:30px;padding:0;border-radius:var(--r);border:1px solid var(--brd);background:var(--surf2);color:var(--tx);font-family:'DM Mono',monospace;font-size:11px;text-align:center;outline:none;flex:0 0 30px}
 .order-input:focus{border-color:var(--acc);background:var(--surf)}
+.estimate-input{width:48px;min-width:48px;max-width:48px;height:30px;padding:0 3px;border-radius:var(--r);border:1px solid var(--brd);background:var(--surf2);color:var(--tx);font-family:'DM Mono',monospace;font-size:11px;text-align:center;outline:none;flex:0 0 48px}
+.estimate-input:focus{border-color:var(--acc);background:var(--surf)}
+.goal-btn.on{background:#FED7AA;color:#9A3412}
 .order-input::-webkit-outer-spin-button,.order-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .act-btn{width:30px;height:30px;border-radius:var(--r);border:none;background:var(--surf2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--tx2);transition:all .15s;flex-shrink:0}
 .act-btn:hover{background:var(--surf3);color:var(--tx)}
 .act-btn.play-idle:hover{background:var(--ok-bg);color:var(--ok-tx)}
 .act-btn.play-on{background:#EF4444 !important;color:#fff !important;animation:pulse 1.4s ease-in-out infinite}
-.act-btn.drag-handle{cursor:grab}
-.act-btn.drag-handle:active{cursor:grabbing}
-.act-btn.drag-handle:hover{background:var(--acc-bg);color:var(--acc-tx)}
 .act-btn.del:hover{background:var(--err-bg);color:var(--err-tx)}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 5px rgba(239,68,68,0)}}
 
 .dz{border:1.5px dashed var(--brd2);border-radius:var(--rl);padding:8px;margin-bottom:5px;display:none;min-height:36px;align-items:center;justify-content:center;font-size:12px;color:var(--tx3);transition:all .15s}
 .dz.vis{display:flex}
 .dz.hot{border-color:var(--acc);background:var(--acc-bg);color:var(--acc-tx)}
+.grp-total{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:6px 4px 14px;font-size:12px;color:var(--tx3)}
+.grp-total strong{font-family:'DM Mono',monospace;color:var(--tx)}
+.grp-total.over strong{color:#DC2626}
+.bulk-floating{position:sticky;top:0;z-index:30;margin:0 0 10px;background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);box-shadow:var(--sh);padding:8px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 /* KANBAN */
 .kb-wrap{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
@@ -476,6 +492,7 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
   .main{height:100dvh;min-height:0;width:100%;display:flex}
   .mobile-menu-btn{display:flex;flex-shrink:0}
   .sb{position:fixed;inset:0 auto 0 0;width:min(86vw,310px);height:100dvh;max-height:none;z-index:320;transform:translateX(-105%);transition:transform .2s ease;border-right:1px solid var(--brd);border-bottom:none;display:flex;overflow-y:auto;overflow-x:hidden;box-shadow:var(--sh2);padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  .sb-track-slot{padding:0 10px 10px}
   .sb.open{transform:translateX(0)}
   .sb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:300}
   .sb-backdrop.open{display:block}
@@ -512,8 +529,9 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
   .ttitle{font-size:14px;line-height:1.32;margin-bottom:6px}
   .tmeta{gap:4px}
   .tag,.proj-tag,.ttime{font-size:10.5px}
-  .t-btns{display:grid;grid-template-columns:repeat(3,34px);gap:5px;margin-left:auto;flex:0 0 auto}
+  .t-btns{display:grid;grid-template-columns:repeat(4,34px);gap:5px;margin-left:auto;flex:0 0 auto}
   input[type=text].order-input{width:34px;min-width:34px;max-width:34px;height:34px;padding:0;font-size:11px;flex-basis:34px}
+  .estimate-input{width:45px;min-width:45px;max-width:45px;height:34px;font-size:10.5px;grid-column:span 2;justify-self:end}
   .act-btn{width:34px;height:34px;font-size:15px}
   .kb-wrap{gap:10px;scroll-snap-type:x mandatory;padding-bottom:10px}
   .kb-col{min-width:82vw;width:82vw;scroll-snap-align:start}
@@ -555,6 +573,16 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
       <div class="sb-logo-icon">&#9889;</div>
       <span class="sb-logo-text">HardWork<br>Leo Mota</span>
     </div>
+    <div class="sb-track-slot">
+      <div class="sb-timer" id="sb-timer">
+        <div class="sb-timer-lbl" id="st-label">&#9679; Registrando</div>
+        <div class="sb-timer-title" id="st-title"></div>
+        <div class="sb-timer-row">
+          <span class="sb-clock" id="st-clock">00:00:00</span>
+          <button class="sb-stop" onclick="stopActiveTimer()" title="Parar">&#9632;</button>
+        </div>
+      </div>
+    </div>
     <div class="sb-sec">Projetos</div>
     <div id="project-nav"></div>
     <div class="sb-sec">Espaço</div>
@@ -562,14 +590,6 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
     <button class="sb-item" id="nav-studies" onclick="showStudies(this)">&#127891; Estudos</button>
     <button class="sb-item" id="nav-routines" onclick="showRoutines(this)">&#128257; Rotinas</button>
     <div class="sb-foot">
-      <div class="sb-timer" id="sb-timer">
-        <div class="sb-timer-lbl">&#9679; Registrando</div>
-        <div class="sb-timer-title" id="st-title"></div>
-        <div class="sb-timer-row">
-          <span class="sb-clock" id="st-clock">00:00:00</span>
-          <button class="sb-stop" onclick="stopTracking()" title="Parar">&#9632;</button>
-        </div>
-      </div>
 
     </div>
   </aside>
@@ -580,6 +600,7 @@ input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:
       <button class="tb-icon-btn mobile-menu-btn" onclick="toggleMobileNav()" title="Menu">&#9776;</button>
       <span class="page-title" id="page-title">Lista</span>
       <div class="tb-right">
+        <button class="sb-add top-add today-toggle" id="today-toggle" onclick="toggleTodayOnly()">HOJE</button>
         <button class="sb-add top-add" onclick="openNew()">&#43; Nova tarefa</button>
         <button class="sb-add top-manage" onclick="openBulkImport()">&#8679; Massa</button>
         <button class="sb-add top-manage" onclick="openMeetingTemplateModal()">&#128197; Modelo reunião</button>
@@ -705,12 +726,15 @@ function stopPomoAlert(){
   clearInterval(window._pomoAlertIv);clearTimeout(window._pomoAlertTo);
   const el=document.getElementById('pomo-alert');if(el)el.remove();
 }
-function triggerPomoAlert(msg,after){
+function triggerPomoAlert(msg,opts={}){
   stopPomoAlert();playBeep();
   let left=10;
   const el=document.createElement('div');
   el.id='pomo-alert';el.className='pomo-alert';
-  el.innerHTML=`<div><strong>Pomodoro concluído</strong><span id="pomo-alert-txt">${msg} ⬢ alerta por ${left}s</span></div><button type="button">Parar</button>`;
+  const actions=opts.breakDone
+    ?`<button type="button" onclick="event.stopPropagation();stopPomoAlert()">Parar</button>`
+    :`<button type="button" onclick="event.stopPropagation();stopPomoAlert();startPomo(${opts.taskId||pomoLastTask},${opts.mins||pomoLastMins},'Pomodoro ${opts.mins||pomoLastMins}m')">Repetir ciclo</button><button type="button" onclick="event.stopPropagation();stopPomoAlert();startBreakPomo(5)">Pausa 5m</button><button type="button" onclick="event.stopPropagation();stopPomoAlert()">Parar</button>`;
+  el.innerHTML=`<div><strong>${opts.breakDone?'Pausa concluída':'Pomodoro concluído'}</strong><span id="pomo-alert-txt">${msg} ⬢ alerta por ${left}s</span></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${actions}</div>`;
   el.onclick=stopPomoAlert;document.body.appendChild(el);
   window._pomoAlertIv=setInterval(()=>{left--;playBeep();const t=document.getElementById('pomo-alert-txt');if(t)t.textContent=`${msg} ⬢ alerta por ${Math.max(0,left)}s`;if(left<=0)stopPomoAlert();},1000);
   window._pomoAlertTo=setTimeout(stopPomoAlert,10000);
@@ -776,7 +800,7 @@ let nextId=Math.max(...tasks.map(t=>t.id),0)+1;
 let curView='list',calMonth=todayCal.getMonth(),calYear=todayCal.getFullYear(),curNoteId=null;
 let curStudyId=null;
 let studyModuleFilter='all';
-let fType='all',fProj='all',showDone=true,dashPer='week',advField='all',advValue='all',quickSearch='';
+let fType='all',fProj='all',showDone=true,dashPer='week',advField='all',advValue='all',quickSearch='',todayOnly=false;
 let dragId=null,dragColId=null,bulkMode=false,bulkSel=new Set();
 let noteBulkMode=false,noteBulkSel=new Set(),noteDragId=null;
 
@@ -809,13 +833,16 @@ ensureCoreCategories();
 
 // ── TIME TRACKING ─────────────────────────────────────────────────────────────
 let activeId=null,trkStart=null,trkIv=null;
-let pomoOn=false,pomoEnd=null,pomoIv=null,pomoTid=null;
+let pomoOn=false,pomoEnd=null,pomoIv=null,pomoTid=null,pomoBreak=false,pomoLastTask=null,pomoLastMins=25,pomoBreakStart=null;
 
 function startTracking(id){
   if(activeId!==null)stopTracking();
+  stopBreakTimer(false);
   activeId=id;trkStart=Date.now();
   const t=tasks.find(x=>x.id===id);
   document.getElementById('st-title').textContent=t?t.title:'';
+  document.getElementById('st-label').innerHTML='&#9679; Registrando';
+  document.getElementById('sb-timer').classList.remove('break');
   document.getElementById('sb-timer').classList.add('on');
   clearInterval(trkIv);trkIv=setInterval(tickTrk,1000);tickTrk();render();
 }
@@ -831,6 +858,10 @@ function stopTracking(keepPomo=false){
   document.getElementById('st-clock').textContent='00:00:00';
   persist();
 }
+function stopActiveTimer(){
+  if(pomoBreak){stopBreakTimer(true);return;}
+  stopTracking();
+}
 function tickTrk(){
   if(!trkStart)return;
   const e=Math.floor((Date.now()-trkStart)/1000);
@@ -844,7 +875,7 @@ function startPomo(tid,mins,lbl){
   if(pomoOn&&pomoTid===tid){
     clearInterval(pomoIv);pomoOn=false;stopTracking();render();return;
   }
-  pomoOn=true;pomoEnd=Date.now()+mins*60000;pomoTid=tid;
+  pomoOn=true;pomoEnd=Date.now()+mins*60000;pomoTid=tid;pomoBreak=false;pomoLastTask=tid;pomoLastMins=mins;
   startTracking(tid);
   clearInterval(pomoIv);
   pomoIv=setInterval(()=>{
@@ -853,11 +884,35 @@ function startPomo(tid,mins,lbl){
     document.querySelectorAll('.pomo-clock').forEach(el=>el.textContent=hms(rem));
     if(rem<=0){
       clearInterval(pomoIv);pomoOn=false;stopTracking(true);
-      if(mins===25)triggerPomoAlert('Pomodoro 25min concluído. Iniciando pausa de 5 minutos...',()=>setTimeout(()=>startPomo(tid,5,'Pausa 5m'),300));
-      else triggerPomoAlert(`${lbl} concluído!`);
+      triggerPomoAlert(`${lbl} concluído!`,{taskId:tid,mins});
       render();
     }
   },1000);render();
+}
+function startBreakPomo(mins=5){
+  requestNotifyPermission();
+  if(activeId!==null)stopTracking();
+  stopBreakTimer(false);
+  pomoOn=true;pomoBreak=true;pomoTid=null;pomoEnd=Date.now()+mins*60000;pomoBreakStart=Date.now();
+  document.getElementById('st-title').textContent=`Pausa ${mins}m`;
+  document.getElementById('st-label').innerHTML='&#9679; Pausa';
+  document.getElementById('sb-timer').classList.add('on','break');
+  clearInterval(pomoIv);
+  pomoIv=setInterval(()=>{
+    const rem=Math.max(0,Math.ceil((pomoEnd-Date.now())/1000));
+    document.getElementById('st-clock').textContent=hms(rem);
+    document.querySelectorAll('.pomo-clock').forEach(el=>el.textContent=hms(rem));
+    if(rem<=0){stopBreakTimer(false);triggerPomoAlert(`Pausa ${mins}m concluída!`,{breakDone:true});}
+  },1000);
+  document.getElementById('st-clock').textContent=hms(mins*60);
+  render();
+}
+function stopBreakTimer(renderAfter=true){
+  if(!pomoBreak)return;
+  clearInterval(pomoIv);pomoIv=null;pomoOn=false;pomoBreak=false;pomoTid=null;pomoEnd=null;pomoBreakStart=null;
+  document.getElementById('sb-timer').classList.remove('on','break');
+  document.getElementById('st-clock').textContent='00:00:00';
+  if(renderAfter)render();
 }
 function fmt(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;if(h>0)return`${h}h ${String(m).padStart(2,'0')}m`;return`${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
 function hms(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
@@ -898,6 +953,40 @@ function sortListTasks(a,b){
     if(ao!==bo)return ao-bo;
   }
   return (a.date||'').localeCompare(b.date||'')||priorityRank(a.priority)-priorityRank(b.priority)||(a.time||'').localeCompare(b.time||'');
+}
+function cleanEstimateValue(v){return String(v||'').toLowerCase().replace(/[^0-9hm\s]/g,'').replace(/\s+/g,' ').trim();}
+function parseEstimateToMinutes(v){
+  v=cleanEstimateValue(v);if(!v)return 0;
+  let total=0,matched=false,m;
+  const re=/(\d+)\s*([hm])/g;
+  while((m=re.exec(v))){matched=true;total+=m[2]==='h'?Number(m[1])*60:Number(m[1]);}
+  if(!matched&&/^\d+$/.test(v))total=Number(v);
+  return total;
+}
+function estimateLabel(v){
+  const mins=parseEstimateToMinutes(v);if(!mins)return'';
+  const h=Math.floor(mins/60),m=mins%60;
+  return `${h?h+'h ':''}${m?m+'m':''}`.trim();
+}
+function groupEstimateMinutes(ts){return ts.reduce((a,t)=>a+parseEstimateToMinutes(t.estimate),0);}
+function estimateTotalHtml(ts,label){
+  if(label!=='Hoje'&&label!=='Amanhã')return'';
+  const mins=groupEstimateMinutes(ts),over=mins>420;
+  return`<div class="grp-total${over?' over':''}"><span>Horas previstas do dia</span><strong>${estimateLabel(mins>=60?`${Math.floor(mins/60)}h ${mins%60}m`:`${mins}m`)||'0m'}</strong></div>`;
+}
+function setTaskEstimate(id,input){
+  input.value=cleanEstimateValue(input.value);
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  t.estimate=input.value;
+  save('hw_tasks',tasks);
+}
+function toggleDayGoal(id){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  if(t.dailyGoal){snapshot();t.dailyGoal=false;persist();return;}
+  const d=t.date||todayStr;
+  const count=tasks.filter(x=>x.id!==id&&x.dailyGoal&&x.date===d&&x.status!=='done').length;
+  if(count>=3)return alert('Você já marcou 3 tarefas meta para este dia. Desmarque uma delas antes de marcar outra.');
+  snapshot();t.dailyGoal=true;if(!t.date)t.date=d;persist();
 }
 function pLabel(p){return(priorityOptions.find(x=>x.id===p)?.name)||p;}
 function tLabel(t){return(typeOptions.find(x=>x.id===t)?.name)||t;}
@@ -979,6 +1068,7 @@ function renderProjectSidebar(){
 
 function render(){
   renderProjectSidebar();
+  document.getElementById('today-toggle')?.classList.toggle('on',todayOnly);
   const c=document.getElementById('mc');
   if(isCloudLocked()){
     c.innerHTML=`<div class="cloud-lock"><div class="cloud-lock-card">
@@ -1005,6 +1095,11 @@ function render(){
   updateCloudBar();
   updNot();
 }
+function toggleTodayOnly(){
+  todayOnly=!todayOnly;
+  if(curView!=='list')sv('list',document.querySelector('.view-tab[onclick*="list"]'));
+  else render();
+}
 
 // ── LIST ──────────────────────────────────────────────────────────────────────
 function rList(){
@@ -1020,9 +1115,10 @@ function rList(){
     </div>
     ${advFilterBar()}
   </div>`;
+  if(bulkSel.size>=2)html+=`<div class="bulk-floating"><strong>${bulkSel.size} tarefas selecionadas</strong><button class="btn-p" onclick="openBulkEdit()">Editar em massa</button><button class="btn-c" style="color:var(--err-tx)" onclick="bulkDelete()">Excluir</button><button class="btn-c" onclick="clearBulk()">Limpar seleção</button></div>`;
   if(bulkMode||bulkSel.size)html+=bulkBar();
   const wb=weekBounds(0),nwb=weekBounds(1);
-  const groups=[
+  let groups=[
     {id:'overdue',label:'Vencido',always:false,f:t=>t.date&&t.date<todayStr&&t.status!=='done'},
     {id:'today',label:'Hoje',always:true,f:t=>t.date===todayStr&&t.status!=='done'},
     {id:'tomorrow',label:'Amanhã',always:true,f:t=>t.date===tomorrowStr&&t.status!=='done'},
@@ -1031,6 +1127,7 @@ function rList(){
     {id:'no-date',label:'Sem data',always:true,f:t=>!t.date&&t.status!=='done'},
     {id:'done',label:'Concluídas',f:t=>t.status==='done'},
   ];
+  if(todayOnly)groups=groups.filter(g=>g.id==='today');
   let any=false;
   groups.forEach(g=>{
     if(g.label==='Concluídas'&&!showDone)return;
@@ -1052,33 +1149,37 @@ function rList(){
       const isOver=t.date&&t.date<todayStr&&t.status!=='done';
       const disp=(t.totalTime||0)+live(t);
       const lc=t.labels.map(id=>lblChip(id,true)).join('');
-      html+=`<div class="ti${isR?' trk':''}${done?' done-row':''}${isOver?' overdue':''}" data-id="${t.id}">
-        ${bulkMode?`<input type="checkbox" class="bulk-check" ${bulkSel.has(t.id)?'checked':''} onclick="event.stopPropagation();toggleBulkTask(${t.id},this.checked)">`:''}
+      html+=`<div class="ti${isR?' trk':''}${done?' done-row':''}${isOver?' overdue':''}${t.dailyGoal?' day-goal':''}" data-id="${t.id}">
+        <input type="checkbox" class="row-select" ${bulkSel.has(t.id)?'checked':''} onclick="event.stopPropagation();toggleBulkTask(${t.id},this.checked)" title="Selecionar tarefa">
         <div class="tchk${done?' done':''}" onclick="event.stopPropagation();tglDone(${t.id})">${done?'&#10003;':''}</div>
         <div class="tbody" onclick="openTask(${t.id})">
           <div class="ttitle${done?' done':''}">${esc(t.title)}</div>
           <div class="tmeta">
-            ${ttag(t.type)}${ptag(t.priority)}
-            ${t.project?pjtag(t.project):''}
-            ${t.client?`<span class="tag tag-date">${esc(t.client)}</span>`:''}
+            <button class="tag ${String(t.type).startsWith('meeting')?'tag-meeting':'tag-task'} editable" onclick="beginInlineSelect(event,${t.id},'type')" title="Alterar tipo">${esc(tLabel(t.type))}</button>
+            <button class="tag tag-${t.priority} editable" onclick="beginInlineSelect(event,${t.id},'priority')" title="Alterar prioridade">${esc(pLabel(t.priority))}</button>
+            ${t.project?`<button class="proj-tag editable" style="background:${PC[t.project]||'#888780'}18;color:${PC[t.project]||'#888780'};border:1px solid ${PC[t.project]||'#888780'}33" onclick="beginInlineSelect(event,${t.id},'project')" title="Alterar projeto">${esc(t.project)}</button>`:`<button class="tag tag-date editable" onclick="beginInlineSelect(event,${t.id},'project')" title="Definir projeto">Sem projeto</button>`}
+            ${t.client?`<button class="tag tag-date editable" onclick="beginInlineSelect(event,${t.id},'client')" title="Alterar cliente">${esc(t.client)}</button>`:''}
             ${isOver?'<span class="tag tag-high">Vencido</span>':''}
             ${t.date?`<button class="tag tag-date editable" onclick="beginInlineDate(event,${t.id})" title="Alterar data">&#128197; ${fd(t.date)}${t.time?' · '+t.time:''}</button>`:''}
+            ${!t.date?`<button class="tag tag-date editable" onclick="beginInlineDate(event,${t.id})" title="Definir data">Sem data</button>`:''}
+            ${t.status?`<button class="tag tag-date editable" onclick="beginInlineSelect(event,${t.id},'status')" title="Alterar status">${esc(columns.find(c=>c.id===t.status)?.name||t.status)}</button>`:''}
             ${t.subtasks.length?`<span style="font-size:11px;color:var(--tx3)">&#128203; ${sd}/${t.subtasks.length}</span>`:''}
             ${disp>0||isR?`<span class="ttime${isR?' run':''}" data-lid="${t.id}" class="live-time">&#128336; ${fmt(disp)}</span>`:''}
             ${lc}
           </div>
         </div>
         <div class="t-btns">
-          <input class="order-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${t.listOrder??''}" onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" oninput="setTaskListOrder(${t.id},this)" title="Ordem na lista">
+          <button class="act-btn goal-btn${t.dailyGoal?' on':''}" onclick="event.stopPropagation();toggleDayGoal(${t.id})" title="Marcar como meta do dia">&#9678;</button>
+          <input class="estimate-input" type="text" inputmode="text" value="${esc(t.estimate||'')}" onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" oninput="setTaskEstimate(${t.id},this)" onblur="render()" title="Tempo previsto. Ex: 1h 30m">
           <button class="act-btn${isR?' play-on':' play-idle'}" onclick="event.stopPropagation();${isR?'stopTracking()':'startTracking('+t.id+')'}" title="${isR?'Pausar cronômetro':'Iniciar cronômetro'}">${isR?'&#9646;&#9646;':'&#9654;'}</button>
-          <button class="act-btn drag-handle" draggable="true" data-id="${t.id}" onclick="event.stopPropagation()" title="Arrastar tarefa">&#9776;</button>
+          <input class="order-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${t.listOrder??''}" onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" oninput="setTaskListOrder(${t.id},this)" title="Posição na lista">
           <button class="act-btn" onclick="event.stopPropagation();openTask(${t.id})" title="Editar tarefa">&#9998;</button>
           <button class="act-btn" onclick="event.stopPropagation();dupTask(${t.id})" title="Duplicar tarefa">&#10065;</button>
           <button class="act-btn del" onclick="event.stopPropagation();quickDelTask(${t.id})" title="Excluir tarefa">&#128465;</button>
         </div>
       </div>`;
     });
-    html+='</div>';
+    html+=estimateTotalHtml(ts,g.label)+'</div>';
   });
   if(!any)html+='<div style="text-align:center;padding:48px;color:var(--tx3);font-size:13px">Nenhuma tarefa encontrada.</div>';
   return html;
@@ -1103,6 +1204,31 @@ function setInlineDate(id,date){
   const t=tasks.find(x=>x.id===id);if(!t)return;
   snapshot();t.date=date||'';
   if(t.status==='done')t.status='todo';
+  persist();
+}
+function inlineOptions(field){
+  if(field==='type')return typeOptions.map(o=>[o.id,o.name]);
+  if(field==='priority')return priorityOptions.map(o=>[o.id,o.name]);
+  if(field==='project')return [['','Sem projeto'],...PROJECTS.map(p=>[p,p])];
+  if(field==='client')return [['','Sem cliente'],...globalClients.map(c=>[c,c])];
+  if(field==='status')return columns.map(c=>[c.id,c.name]);
+  return [];
+}
+function beginInlineSelect(e,id,field){
+  e.preventDefault();e.stopPropagation();
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  const chip=e.currentTarget,sel=document.createElement('select');
+  sel.className='inline-date-input';
+  sel.onclick=ev=>ev.stopPropagation();
+  inlineOptions(field).forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;if((t[field]||'')===v)o.selected=true;sel.appendChild(o);});
+  sel.onchange=ev=>{ev.stopPropagation();setInlineField(id,field,sel.value);};
+  sel.onkeydown=ev=>{ev.stopPropagation();if(ev.key==='Escape')render();};
+  sel.onblur=()=>setTimeout(()=>{if(document.body.contains(sel))render();},120);
+  chip.replaceWith(sel);sel.focus();
+}
+function setInlineField(id,field,value){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  snapshot();t[field]=value;
   persist();
 }
 function setTaskListOrder(id,input){
@@ -1179,6 +1305,38 @@ function visibleListTasks(){
 function selectVisibleTasks(){bulkMode=true;visibleListTasks().forEach(t=>bulkSel.add(t.id));render();}
 function bulkSetDate(){const d=document.getElementById('bulk-date')?.value;if(!d||!bulkSel.size)return;snapshot();tasks.forEach(t=>{if(bulkSel.has(t.id)){t.date=d;if(t.status==='done')t.status='todo';}});clearBulk();persist();}
 function bulkDelete(){if(!bulkSel.size)return;if(!confirm(`Excluir ${bulkSel.size} tarefa(s) selecionada(s)?`))return;snapshot();if(activeId!==null&&bulkSel.has(activeId))stopTracking();tasks=tasks.filter(t=>!bulkSel.has(t.id));clearBulk();persist();}
+function openBulkEdit(){
+  if(bulkSel.size<2)return showToast('Selecione pelo menos 2 tarefas');
+  const projO=['<option value="__keep">Manter</option>','<option value="">Sem projeto</option>',...PROJECTS.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`)].join('');
+  const statO=['<option value="__keep">Manter</option>',...columns.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`)].join('');
+  const typeO=['<option value="__keep">Manter</option>',...typeOptions.map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`)].join('');
+  const prioO=['<option value="__keep">Manter</option>',...priorityOptions.map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`)].join('');
+  document.getElementById('modal').innerHTML=`<div class="mbk" onclick="closeMB(event)"><div class="mo" onclick="event.stopPropagation()" style="max-width:620px"><div class="mo-main">
+    <div class="mo-hdr"><span class="mo-title">Editar ${bulkSel.size} tarefas em massa</span><button class="ib" style="margin-left:auto" onclick="closeModalNoSave()">&#10005;</button></div>
+    <div class="mo-body">
+      <div class="fr2"><div class="ff"><label class="fl">Data</label><input type="date" id="bulk-edit-date"></div><div class="ff"><label class="fl">Ação de data</label><select id="bulk-date-action"><option value="keep">Manter</option><option value="set">Aplicar data acima</option><option value="clear">Eliminar data</option></select></div></div>
+      <div class="fr2"><div class="ff"><label class="fl">Projeto</label><select id="bulk-edit-project">${projO}</select></div><div class="ff"><label class="fl">Status</label><select id="bulk-edit-status">${statO}</select></div></div>
+      <div class="fr2"><div class="ff"><label class="fl">Tipo</label><select id="bulk-edit-type">${typeO}</select></div><div class="ff"><label class="fl">Prioridade</label><select id="bulk-edit-priority">${prioO}</select></div></div>
+    </div>
+    <div class="mo-foot"><button class="btn-c" onclick="closeModalNoSave()">Cancelar</button><button class="btn-p" onclick="applyBulkEdit()">Aplicar alterações</button></div>
+  </div></div></div>`;
+}
+function applyBulkEdit(){
+  if(!bulkSel.size)return closeModalNoSave();
+  const dateAct=document.getElementById('bulk-date-action')?.value||'keep',date=document.getElementById('bulk-edit-date')?.value||'';
+  const project=document.getElementById('bulk-edit-project')?.value,status=document.getElementById('bulk-edit-status')?.value,type=document.getElementById('bulk-edit-type')?.value,priority=document.getElementById('bulk-edit-priority')?.value;
+  snapshot();
+  tasks.forEach(t=>{
+    if(!bulkSel.has(t.id))return;
+    if(dateAct==='set')t.date=date;
+    if(dateAct==='clear')t.date='';
+    if(project!=='__keep')t.project=project||'';
+    if(status!=='__keep')t.status=status;
+    if(type!=='__keep')t.type=type;
+    if(priority!=='__keep')t.priority=priority;
+  });
+  clearBulk();closeModal();
+}
 function initLD(){
   document.querySelectorAll('.drag-handle[draggable]').forEach(el=>{
     el.addEventListener('dragstart',e=>{dragId=+el.dataset.id;el.closest('.ti')?.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(dragId));document.querySelectorAll('.dz').forEach(z=>z.classList.add('vis'));document.querySelectorAll('.grp').forEach(g=>g.classList.add('drop-ready'));e.stopPropagation();});
@@ -2020,6 +2178,7 @@ function buildForm(t){
             <button class="pomo-btn${pomoOn&&pomoTid===t.id?' run':''}" onclick="startPomo(${t.id},5,'Pomodoro 5m');closeModal()">&#9654; 5 min</button>
             <button class="pomo-btn${pomoOn&&pomoTid===t.id?' run':''}" onclick="startPomo(${t.id},10,'Pomodoro 10m');closeModal()">&#9654; 10 min</button>
             <button class="pomo-btn${pomoOn&&pomoTid===t.id?' run':''}" onclick="startPomo(${t.id},25,'Pomodoro 25m');closeModal()">&#9654; 25 min + pausa</button>
+            <button class="pomo-btn" onclick="startBreakPomo(5);closeModal()">&#9208; Pausa 5m</button>
           </div>
         </div>
       </div>
@@ -2043,6 +2202,11 @@ function buildForm(t){
     <div class="fr-time-label">
       <div class="ff"><label class="fl">Horário</label>${timeField(isNew?'':t.time)}</div>
       <div class="ff"><label class="fl">Marcadores</label>${buildDD('labels',isNew?[]:t.labels,globalLabels,lb=>lb.color,'Selecionar marcadores...',true,'Novo marcador...')}</div>
+    </div>
+    <div class="fr3">
+      <div class="ff"><label class="fl">Posição</label><input type="text" id="f-order" inputmode="numeric" pattern="[0-9]*" value="${isNew?'':(t.listOrder??'')}" placeholder="Ex: 1"></div>
+      <div class="ff"><label class="fl">Tempo previsto</label><input type="text" id="f-estimate" value="${isNew?'':esc(t.estimate||'')}" placeholder="Ex: 1h 30m" oninput="this.value=cleanEstimateValue(this.value)"></div>
+      <div class="ff"><label class="fl">Meta do dia</label><select id="f-goal"><option value="0"${isNew||!t.dailyGoal?' selected':''}>Não</option><option value="1"${!isNew&&t.dailyGoal?' selected':''}>Sim</option></select></div>
     </div>
     ${ttHtml}
     <div class="ff"><label class="fl">Subtarefas</label>
@@ -2140,13 +2304,20 @@ function getVals(){
     client:cli,
     date:document.getElementById('f-date')?.value||'',
     time:document.getElementById('f-time')?.value||'',
+    listOrder:(document.getElementById('f-order')?.value||'').trim()?Number((document.getElementById('f-order')?.value||'').replace(/\D/g,'')):'',
+    estimate:cleanEstimateValue(document.getElementById('f-estimate')?.value||''),
+    dailyGoal:document.getElementById('f-goal')?.value==='1',
     details:rte?rte.innerHTML:'',
     subtasks:[...(window._sub||[])],
     labels:[...(window._editLabels||[])],
   };
 }
-function saveNew(){const v=getVals();if(!v.title)return;snapshot();tasks.push({id:nextId++,...v,totalTime:0,sessions:[],history:[]});window._sub=[];closeModal();}
-function saveEdit(id){snapshot();const t=tasks.find(x=>x.id===id);if(!t)return;const v=getVals();if(!v.title)return;const hist=t.history||[];Object.assign(t,v);t.history=hist;window._sub=[];closeModal();}
+function canApplyDailyGoal(id,date){
+  const d=date||todayStr;
+  return tasks.filter(x=>x.id!==id&&x.dailyGoal&&x.date===d&&x.status!=='done').length<3;
+}
+function saveNew(){const v=getVals();if(!v.title)return;if(v.dailyGoal&&!canApplyDailyGoal(0,v.date))return alert('Você já marcou 3 tarefas meta para este dia.');snapshot();tasks.push({id:nextId++,...v,totalTime:0,sessions:[],history:[]});window._sub=[];closeModal();}
+function saveEdit(id){snapshot();const t=tasks.find(x=>x.id===id);if(!t)return;const v=getVals();if(!v.title)return;if(v.dailyGoal&&!canApplyDailyGoal(id,v.date))return alert('Você já marcou 3 tarefas meta para este dia.');const hist=t.history||[];Object.assign(t,v);t.history=hist;window._sub=[];closeModal();}
 function dupTask(id){
   const t=tasks.find(x=>x.id===id);if(!t)return;
   snapshot();
