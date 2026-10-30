@@ -749,8 +749,8 @@ function triggerPomoAlert(msg,opts={}){
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const APP_TZ='America/Sao_Paulo';
 const today=new Date();
-const todayStr=brTodayISO();
-const tomorrowStr=addDaysISO(todayStr,1);
+let todayStr=brTodayISO();
+let tomorrowStr=addDaysISO(todayStr,1);
 const nextWeekStr=addDaysISO(todayStr,7);
 const todayCal=dateFromISO(todayStr);
 const TIME_SLOTS=[];
@@ -2391,12 +2391,12 @@ function saveBulkImport(){
 
 function openMeetingTemplateModal(pref='meeting-01',sourceId=0){
   document.getElementById('modal').innerHTML=`<div class="mbk" data-mode="meeting-template" onclick="closeMB(event)"><div class="mo" onclick="event.stopPropagation()" style="max-width:620px"><div class="mo-main">
-    <div class="mo-hdr"><span class="mo-title">Modelo de reunião comercial</span><button class="ib" style="margin-left:auto" onclick="${sourceId?`openTask(${sourceId})`:'closeModalNoSave()'}">&#10005;</button></div>
+    <div class="mo-hdr"><span class="mo-title">Modelo de Reunião</span><button class="ib" style="margin-left:auto" onclick="${sourceId?`openTask(${sourceId})`:'closeModalNoSave()'}">&#10005;</button></div>
     <div class="mo-body">
-      <div class="fr2"><div class="ff"><label class="fl">Modelo</label><select id="mt-kind"><option value="meeting-01"${pref==='meeting-01'?' selected':''}>Reunião 01</option><option value="meeting-02"${pref==='meeting-02'?' selected':''}>Reunião 02</option></select></div><div class="ff"><label class="fl">Nome/Lead</label><input id="mt-name" placeholder="Nome do lead ou cliente"></div></div>
+      <div class="fr2"><div class="ff"><label class="fl">Modelo</label><select id="mt-kind" onchange="document.getElementById('mt-consult').hidden=this.value!=='consult'"><option value="consult">Encontro Consultoria</option><option value="meeting-01"${pref==='meeting-01'?' selected':''}>Reunião Comercial 01</option><option value="meeting-02"${pref==='meeting-02'?' selected':''}>Reunião Comercial 02</option></select></div><div class="ff"><label class="fl">Nome/Lead</label><input id="mt-name" placeholder="Nome do lead ou cliente"></div></div>
+      <div class="fr2" id="mt-consult" hidden><div class="ff"><label class="fl">Cliente</label><select id="mt-client">${globalClients.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select></div><div class="ff"><label class="fl">Nº do encontro</label><input id="mt-number" type="text" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')" placeholder="01"></div></div>
       <div class="fr2"><div class="ff"><label class="fl">Data</label><input type="date" id="mt-date"></div><div class="ff"><label class="fl">Horário</label>${timeField('')}</div></div>
       <div class="ff"><label class="fl">Observação</label><textarea id="mt-note" style="min-height:90px" placeholder="Contexto rápido da reunião, link, etapa do funil..."></textarea></div>
-      <div class="bulk-help">A tarefa será criada como <strong>Reunião comercial</strong>, no projeto <strong>Reuniões comerciais</strong>, com subtarefas/checklist prontos e editáveis.</div>
     </div>
     <div class="mo-foot"><button class="btn-c" onclick="${sourceId?`openTask(${sourceId})`:'closeModalNoSave()'}">Cancelar</button><button class="btn-p" onclick="saveMeetingTemplate(${sourceId})">Criar reunião</button></div>
   </div></div></div>`;
@@ -2420,12 +2420,35 @@ function saveMeetingTemplate(sourceId=0){
   const date=document.getElementById('mt-date')?.value||'';
   const time=document.getElementById('f-time')?.value||'';
   const note=(document.getElementById('mt-note')?.value||'').trim();
-  const tpl=meetingTemplateData(kind,name,note);
+  const client=kind==='consult'?(document.getElementById('mt-client')?.value||name):name;
+  const number=document.getElementById('mt-number')?.value||'';
+  if(kind==='consult'&&(!client||!number))return alert('Preencha o cliente e o número do encontro.');
+  const tpl=kind==='consult'?{title:`Encontro Consultoria ${number} - ${client}`,details:`<p>${esc(note)}</p>`,subtasks:[]}:meetingTemplateData(kind,name,note);
   snapshot();
-  tasks.push({id:nextId++,title:tpl.title,type:'meeting-commercial',status:'todo',priority:'high',date,time,details:tpl.details,subtasks:tpl.subtasks.map((text,i)=>({id:Date.now()+i,text,done:false})),totalTime:0,sessions:[],project:'Reuniões comerciais',client:name,labels:[],history:sourceId?[{text:`Criada a partir da reunião ${sourceId}`,time:new Date().toLocaleString('pt-BR') }]:[]});
+  tasks.push({id:nextId++,title:tpl.title,type:kind==='consult'?'meeting-operational':'meeting-commercial',status:'todo',priority:'high',date,time,details:tpl.details,subtasks:tpl.subtasks.map((text,i)=>({id:Date.now()+i,text,done:false})),totalTime:0,sessions:[],project:kind==='consult'?'Reuniões operacionais':'Reuniões comerciais',client,labels:[],history:sourceId?[{text:`Criada a partir da reunião ${sourceId}`,time:new Date().toLocaleString('pt-BR') }]:[]});
   closeModal();showToast('Reunião criada pelo modelo');
 }
 function shouldOfferMeeting02(t){return t?.type==='meeting-commercial'&&/reuni[aã]o 01/i.test(String(t.title||''));}
+function checkDailySchedule(){
+  if(isCloudLocked())return;
+  const now=new Date(),ds=brTodayISO();
+  const hm=new Intl.DateTimeFormat('en-GB',{timeZone:APP_TZ,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);
+  if(ds!==todayStr&&hm>='00:01'){todayStr=ds;tomorrowStr=addDaysISO(ds,1);render();}
+  if(!cloudReady||(CLOUD_LOGIN_REQUIRED&&!cloudUser))return;
+  const day=dateFromISO(ds).getDay();
+  let sunday=addDaysISO(ds,-day);
+  if(day===0&&hm<'09:00')sunday=addDaysISO(sunday,-7);
+  const monday=addDaysISO(sunday,1),key='grooming:'+monday;
+  if(tasks.some(t=>t.scheduleKey===key||(/^Grooming semanal/i.test(t.title||'')&&t.date===monday)))return;
+  const source=tasks.filter(t=>/^Grooming semanal/i.test(t.title||'')).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  if(!source)return;
+  const copy=JSON.parse(JSON.stringify(source));
+  Object.assign(copy,{id:nextId++,date:monday,status:'todo',totalTime:0,sessions:[],history:[],scheduleKey:key});
+  copy.subtasks=(copy.subtasks||[]).map((s,i)=>({...s,id:Date.now()+i,done:false}));
+  tasks.push(copy);persist();
+}
+setInterval(checkDailySchedule,15000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkDailySchedule();});
 
 function rRoutines(){
   const list=routines.slice().sort((a,b)=>(a.project||'').localeCompare(b.project||'')||a.title.localeCompare(b.title));
